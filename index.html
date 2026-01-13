@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Prediksi Harga Rumah</title>
+</head>
+<body>
+    <h2>Prediksi Harga Rumah</h2>
+
+    <label>Luas Bangunan (Square Footage)</label><br>
+    <input type="number" id="Square_Footage"><br><br>
+
+    <label>Jumlah Kamar Tidur</label><br>
+    <input type="number" id="Num_Bedrooms"><br><br>
+
+    <label>Jumlah Kamar Mandi</label><br>
+    <input type="number" id="Num_Bathrooms"><br><br>
+
+    <label>Tahun Dibangun</label><br>
+    <input type="number" id="Year_Built"><br><br>
+
+    <label>Luas Tanah</label><br>
+    <input type="number" id="Lot_Size"><br><br>
+
+    <label>Garasi (0 = tidak, 1 = ada)</label><br>
+    <input type="number" id="Garage_Size"><br><br>
+
+    <label>Kualitas Lingkungan (1–5)</label><br>
+    <input type="number" id="Neighborhood_Quality"><br><br>
+
+    <button onclick="prediksi()">Prediksi Harga</button>
+
+    <h3 id="hasil"></h3>
+
+    <script>
+        async function prediksi() {
+            const data = {
+                Square_Footage: parseFloat(document.getElementById("Square_Footage").value),
+                Num_Bedrooms: parseInt(document.getElementById("Num_Bedrooms").value),
+                Num_Bathrooms: parseInt(document.getElementById("Num_Bathrooms").value),
+                Year_Built: parseInt(document.getElementById("Year_Built").value),
+                Lot_Size: parseFloat(document.getElementById("Lot_Size").value),
+                Garage_Size: parseInt(document.getElementById("Garage_Size").value),
+                Neighborhood_Quality: parseInt(document.getElementById("Neighborhood_Quality").value)
+            };
+
+            const response = await fetch("http://127.0.0.1:8000/predict", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+
+            const harga = Math.round(result.predicted_house_price);
+
+            document.getElementById("hasil").innerText =
+                "Prediksi Harga Rumah: Rp " + harga.toLocaleString("id-ID");
+        }
+    </script>
+</body>
+</html>
